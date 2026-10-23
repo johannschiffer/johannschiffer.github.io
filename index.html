@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genesis | Interactive MCP Config & .cursorrules Builder for AI Agents</title>
+  <meta name="description" content="Generate ready-to-use claude_desktop_config.json, .cursor/mcp.json, and production-grade .cursorrules for Claude Desktop, Cursor, and Windsurf in seconds.">
+  <link rel="canonical" href="https://johannschiffer.github.io/">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brand-500 selection:text-slate-950">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded bg-brand-500 flex items-center justify-center font-bold text-slate-950 text-lg">G</div>
+          <span class="font-bold text-lg text-slate-100 tracking-tight">Genesis</span>
+        </a>
+        <span class="text-xs text-slate-400 border border-slate-700 rounded px-2 py-0.5">MCP Ecosystem</span>
+      </div>
+      <nav class="hidden md:flex items-center space-x-6 text-sm text-slate-300">
+        <a href="#builder" class="hover:text-brand-400 transition-colors">Config Builder</a>
+        <a href="#servers" class="hover:text-brand-400 transition-colors">Core Servers</a>
+        <a href="#guides" class="hover:text-brand-400 transition-colors">Architecture Guides</a>
+        <a href="#downloads" class="hover:text-brand-400 transition-colors">Downloads</a>
+      </nav>
+      <div class="flex items-center space-x-3">
+        <a href="https://github.com/johannschiffer" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-300 hover:text-white border border-slate-700 hover:border-slate-500 rounded px-3 py-1.5 transition-colors">
+          GitHub
+        </a>
+        <a href="https://johanld.gumroad.com/l/genesis-enterprise-suite" target="_blank" rel="noopener noreferrer" class="text-xs font-medium bg-brand-500 hover:bg-brand-400 text-slate-950 rounded px-3.5 py-1.5 transition-colors">
+          Enterprise Suite ($19)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-12 md:py-16 border-b border-slate-800 bg-slate-900/40">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+        Interactive MCP Config &amp; .cursorrules Builder
+      </h1>
+      <p class="mt-4 text-base sm:text-lg text-slate-300 max-w-3xl mx-auto">
+        Assemble compliant Model Context Protocol configs for Claude Desktop, Cursor, and Windsurf. Select the capabilities your agent needs and generate production rulesets with zero friction.
+      </p>
+
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="#builder" class="bg-brand-500 hover:bg-brand-400 text-slate-950 font-semibold px-5 py-2.5 rounded text-sm transition-colors shadow-sm">
+          Open Config Builder
+        </a>
+        <a href="https://johanld.gumroad.com/l/genesis-starter-kit" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium px-5 py-2.5 rounded text-sm transition-colors">
+          Starter Kit (Free / $0+)
+        </a>
+        <a href="https://johanld.gumroad.com/l/genesis-enterprise-suite" target="_blank" rel="noopener noreferrer" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium px-5 py-2.5 rounded text-sm transition-colors">
+          Enterprise Pro Suite ($19)
+        </a>
+      </div>
+
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <a href="https://github.com/TensorBlock/awesome-mcp-servers" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs bg-slate-900/80 border border-slate-800 hover:border-slate-700 rounded-full px-3 py-1 text-slate-300 transition-colors">
+          <img src="https://img.shields.io/badge/Awesome--MCP--Servers-TensorBlock-blue?style=flat-square" alt="Awesome MCP Servers" class="h-4" />
+          <span class="text-slate-400">Indexed in TensorBlock Directory</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Builder Section -->
+  <section id="builder" class="py-12 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-slate-800 gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Live Config Assembly</h2>
+          <p class="text-sm text-slate-400 mt-1">Configure servers, execution presets, and coding rules in real time.</p>
+        </div>
+        <div class="flex items-center space-x-2">
+          <span class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Presets:</span>
+          <button onclick="applyPreset('all')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded px-2.5 py-1 text-slate-300">All Servers</button>
+          <button onclick="applyPreset('scraping')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded px-2.5 py-1 text-slate-300">Web &amp; Scrape</button>
+          <button onclick="applyPreset('data')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded px-2.5 py-1 text-slate-300">DB &amp; DevOps</button>
+          <button onclick="applyPreset('minimal')" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded px-2.5 py-1 text-slate-300">Minimal</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+        <!-- Controls Column -->
+        <div class="lg:col-span-5 space-y-6">
+          
+          <!-- Server Selection -->
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-5">
+            <h3 class="text-sm font-semibold text-slate-200 uppercase tracking-wider mb-3">1. Select MCP Capabilities</h3>
+            <div class="space-y-3" id="serverCheckboxes">
+              <!-- Checkboxes dynamically rendered or static -->
+              <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800/60 transition-colors">
+                <input type="checkbox" id="srv-crawlengine" value="crawlengine-mcp" checked onchange="updateOutputs()" class="mt-1 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-brand-500 h-4 w-4">
+                <div>
+                  <div class="text-sm font-medium text-slate-200">CrawlEngine MCP</div>
+                  <div class="text-xs text-slate-400">Anti-bot web scraping, clean Markdown extraction, header rotator.</div>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800/60 transition-colors">
+                <input type="checkbox" id="srv-pgsafe" value="pgsafe-mcp" checked onchange="updateOutputs()" class="mt-1 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-brand-500 h-4 w-4">
+                <div>
+                  <div class="text-sm font-medium text-slate-200">PgSafe MCP</div>
+                  <div class="text-xs text-slate-400">Zero-trust PostgreSQL / SQLite inspection, safe read-only queries, schema desc.</div>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800/60 transition-colors">
+                <input type="checkbox" id="srv-browserbridge" value="browserbridge-mcp" checked onchange="updateOutputs()" class="mt-1 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-brand-500 h-4 w-4">
+                <div>
+                  <div class="text-sm font-medium text-slate-200">BrowserBridge MCP</div>
+                  <div class="text-xs text-slate-400">Headless browser navigation, clean accessibility tree (AOM) extraction.</div>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800/60 transition-colors">
+                <input type="checkbox" id="srv-omnibridge" value="omnibridge-mcp" checked onchange="updateOutputs()" class="mt-1 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-brand-500 h-4 w-4">
+                <div>
+                  <div class="text-sm font-medium text-slate-200">OmniBridge MCP</div>
+                  <div class="text-xs text-slate-400">Real-time alerts and webhooks across Discord, Telegram, Slack.</div>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800/60 transition-colors">
+                <input type="checkbox" id="srv-sysflow" value="sysflow-mcp" checked onchange="updateOutputs()" class="mt-1 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-brand-500 h-4 w-4">
+                <div>
+                  <div class="text-sm font-medium text-slate-200">SysFlow MCP</div>
+                  <div class="text-xs text-slate-400">Linux administration, system resources, systemd services &amp; timers, logs.</div>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer p-2 rounded hover:bg-slate-800/60 transition-colors">
+                <input type="checkbox" id="srv-fastmcp" value="fastmcp-forge" checked onchange="updateOutputs()" class="mt-1 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-brand-500 h-4 w-4">
+                <div>
+                  <div class="text-sm font-medium text-slate-200">FastMCP Forge</div>
+                  <div class="text-xs text-slate-400">Production MCP server scaffolder, stdio/SSE handlers, middleware.</div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Stack & Ruleset Selection -->
+          <div class="bg-slate-900 border border-slate-800 rounded-lg p-5">
+            <h3 class="text-sm font-semibold text-slate-200 uppercase tracking-wider mb-3">2. Select Project Stack for Rules</h3>
+            <select id="stackSelector" onchange="updateOutputs()" class="w-full bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded p-2.5 focus:ring-brand-500 focus:border-brand-500">
+              <option value="python-fastapi">Python / FastAPI &amp; Pydantic v2</option>
+              <option value="nextjs-app-router">TypeScript / Next.js 14 App Router &amp; Tailwind</option>
+              <option value="go-http-service">Go 1.22+ Clean HTTP Services &amp; CLI</option>
+              <option value="rust-cli">Rust CLI &amp; Axum Services</option>
+              <option value="postgres-schema-design">PostgreSQL / Schema &amp; Safe Migrations</option>
+              <option value="docker-production">Docker &amp; Linux Production DevOps</option>
+              <option value="security-code-review">Security Auditing &amp; OWASP Top 10</option>
+              <option value="mcp-server-python">Custom MCP Server Architecture (Python)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Output Viewer Column -->
+        <div class="lg:col-span-7 flex flex-col">
+          <div class="bg-slate-900 border border-slate-800 rounded-lg flex flex-col h-full overflow-hidden">
+            
+            <!-- Output Tabs -->
+            <div class="flex items-center justify-between border-b border-slate-800 bg-slate-950/60 px-4 pt-2">
+              <div class="flex space-x-1" role="tablist">
+                <button id="tab-claude" onclick="switchTab('claude')" class="px-3 py-2 text-xs font-semibold rounded-t border-b-2 border-brand-500 text-brand-400 bg-slate-900">
+                  claude_desktop_config.json
+                </button>
+                <button id="tab-cursor" onclick="switchTab('cursor')" class="px-3 py-2 text-xs font-semibold rounded-t border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                  .cursor/mcp.json
+                </button>
+                <button id="tab-cursorrules" onclick="switchTab('cursorrules')" class="px-3 py-2 text-xs font-semibold rounded-t border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                  .cursorrules
+                </button>
+                <button id="tab-claude-md" onclick="switchTab('claude-md')" class="px-3 py-2 text-xs font-semibold rounded-t border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+                  CLAUDE.md
+                </button>
+              </div>
+
+              <div class="flex items-center space-x-2 pb-2">
+                <button onclick="copyCurrentOutput()" id="copyBtn" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded px-2.5 py-1 flex items-center space-x-1 transition-colors">
+                  <span>Copy</span>
+                </button>
+                <button onclick="downloadCurrentOutput()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded px-2.5 py-1 transition-colors">
+                  Download
+                </button>
+              </div>
+            </div>
+
+            <!-- Code Display Area -->
+            <div class="p-4 flex-1 bg-slate-950 font-mono text-xs text-slate-200 overflow-auto max-h-[500px]">
+              <pre><code id="outputCodeArea" class="whitespace-pre">Loading builder...</code></pre>
+            </div>
+
+            <!-- Status Banner -->
+            <div class="px-4 py-2 border-t border-slate-800 bg-slate-900/60 text-xs text-slate-400 flex items-center justify-between">
+              <span id="outputTargetHint">Destination: ~/.config/Claude/claude_desktop_config.json</span>
+              <span class="text-emerald-400 font-medium">uvx execution supported</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Core Servers Matrix Section -->
+  <section id="servers" class="py-12 border-b border-slate-800 bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <h2 class="text-2xl font-bold text-white">The Six Genesis Core Servers</h2>
+        <p class="text-sm text-slate-400 mt-2">Open-source lite editions on GitHub with zero-install uvx support. Pro editions fused with enterprise grade resilience.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Server 1 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white">CrawlEngine MCP</h3>
+              <span class="text-xs bg-slate-800 border border-slate-700 text-brand-400 rounded px-2 py-0.5">Scraping</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Anti-bot evasion, clean Markdown extraction, schema scraping, and header rotation.</p>
+            <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800 text-[11px] font-mono text-slate-300">
+              uvx crawlengine-mcp
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2">
+              <a href="https://github.com/johannschiffer/crawlengine-mcp" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">GitHub Repo &rarr;</a>
+              <a href="https://github.com/TensorBlock/awesome-mcp-servers" target="_blank" rel="noopener noreferrer" title="Verified Indexing in TensorBlock">
+                <img src="https://img.shields.io/badge/Awesome--MCP--Servers-TensorBlock-blue?style=flat-square" alt="TensorBlock Indexed" class="h-4" />
+              </a>
+            </div>
+            <span class="text-slate-500">Includes ProxyShield Pro modules</span>
+          </div>
+        </div>
+
+        <!-- Server 2 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white">PgSafe MCP</h3>
+              <span class="text-xs bg-slate-800 border border-slate-700 text-brand-400 rounded px-2 py-0.5">Database</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Zero-trust PostgreSQL/SQLite inspection guard, live PII masking, query cost analyzer.</p>
+            <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800 text-[11px] font-mono text-slate-300">
+              uvx pgsafe-mcp
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="https://github.com/johannschiffer/pgsafe-mcp" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">GitHub Repo &rarr;</a>
+            <span class="text-slate-500">Includes MigrateSafe Pro modules</span>
+          </div>
+        </div>
+
+        <!-- Server 3 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white">BrowserBridge MCP</h3>
+              <span class="text-xs bg-slate-800 border border-slate-700 text-brand-400 rounded px-2 py-0.5">Browser</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Headless browser automation with Playwright session pools, signed receipts, and clean AOM.</p>
+            <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800 text-[11px] font-mono text-slate-300">
+              uvx browserbridge-mcp
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="https://github.com/johannschiffer/browserbridge-mcp" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">GitHub Repo &rarr;</a>
+            <span class="text-slate-500">Cryptographic action receipts</span>
+          </div>
+        </div>
+
+        <!-- Server 4 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white">OmniBridge MCP</h3>
+              <span class="text-xs bg-slate-800 border border-slate-700 text-brand-400 rounded px-2 py-0.5">Messaging</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Multi-channel notification and webhook bus (Telegram, Discord, Slack, WhatsApp, Matrix) with WAL queue.</p>
+            <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800 text-[11px] font-mono text-slate-300">
+              uvx omnibridge-mcp
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="https://github.com/johannschiffer/omnibridge-mcp" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">GitHub Repo &rarr;</a>
+            <span class="text-slate-500">Offline SQLite WAL queue</span>
+          </div>
+        </div>
+
+        <!-- Server 5 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white">SysFlow MCP</h3>
+              <span class="text-xs bg-slate-800 border border-slate-700 text-brand-400 rounded px-2 py-0.5">Sysadmin</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Secure Linux administration plane: systemd service/timer management, journald logs, port auditor.</p>
+            <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800 text-[11px] font-mono text-slate-300">
+              uvx sysflow-mcp
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="https://github.com/johannschiffer/sysflow-mcp" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">GitHub Repo &rarr;</a>
+            <span class="text-slate-500">Non-root hardened sandbox</span>
+          </div>
+        </div>
+
+        <!-- Server 6 -->
+        <div class="bg-slate-900 border border-slate-800 rounded-lg p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-white">FastMCP Forge</h3>
+              <span class="text-xs bg-slate-800 border border-slate-700 text-brand-400 rounded px-2 py-0.5">Scaffolder</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">Production MCP server scaffolder: stdio + authenticated SSE transports with token auth &amp; rate limits.</p>
+            <div class="mt-3 p-2 bg-slate-950 rounded border border-slate-800 text-[11px] font-mono text-slate-300">
+              uvx fastmcp-forge
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="https://github.com/johannschiffer/fastmcp-forge" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">GitHub Repo &rarr;</a>
+            <span class="text-slate-500">SSE + Bearer Auth generator</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- High-Intent SEO Guides Section -->
+  <section id="guides" class="py-12 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold text-white">Engineering Guides &amp; Playbooks</h2>
+        <p class="text-sm text-slate-400 mt-1">Deep architectural references for building resilient AI agent workflows.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <a href="/guides/best-cursorrules-python-fastapi.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Best .cursorrules for Python &amp; FastAPI &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Strict type annotations, Pydantic v2 schemas, and dependency injection patterns.</div>
+        </a>
+        <a href="/guides/best-cursorrules-nextjs-typescript.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Production .cursorrules for Next.js 14 App Router &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Server Components first, Zod boundary validations, and mutation actions.</div>
+        </a>
+        <a href="/guides/claude-desktop-mcp-config-generator.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Claude Desktop MCP Server Config Generator &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Configuration paths, stdio setup, and permission scopes for Claude 3.5.</div>
+        </a>
+        <a href="/guides/safe-postgresql-mcp-server-cursor.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Safe PostgreSQL MCP Server Setup for Cursor &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Zero-trust read-only roles, live PII redaction, and runaway query prevention.</div>
+        </a>
+        <a href="/guides/web-scraping-mcp-anti-bot-claude.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Anti-Bot Web Scraping &amp; Clean Markdown Extraction with MCP &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Handling Cloudflare/perimeter challenges without drowning LLM context.</div>
+        </a>
+        <a href="/guides/headless-browser-automation-mcp.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Deterministic Headless Browser Automation for AI Agents &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Playwright session pools, signed action receipts, and AOM inspection.</div>
+        </a>
+        <a href="/guides/linux-sysadmin-systemd-mcp.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Safe Linux Sysadmin &amp; systemd Automation for Coding Agents &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Container isolation, journald tailing, and service lifecycle management.</div>
+        </a>
+        <a href="/guides/multi-channel-alerts-mcp-slack-telegram.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Multi-Channel Webhooks &amp; Notification Bus for AI Agents &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">SQLite WAL queues, exponential retries across Discord, Slack, and Telegram.</div>
+        </a>
+        <a href="/guides/fastmcp-production-server-scaffolding.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">FastMCP Production Server Scaffolding &amp; SSE Middleware &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Bearer token authentication, rate limiting, and transport configuration.</div>
+        </a>
+        <a href="/guides/production-dockerfile-ai-agents.html" class="p-4 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded block transition-colors">
+          <div class="text-sm font-semibold text-slate-200">Hardened Multi-Stage Dockerfiles for MCP Infrastructure &rarr;</div>
+          <div class="text-xs text-slate-400 mt-1">Non-root execution, healthchecks, minimal attack surfaces, and docker-compose.</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download & Pricing Funnel -->
+  <section id="downloads" class="py-16 bg-slate-900/60 border-b border-slate-800">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Get the Complete Toolkits</h2>
+        <p class="text-sm text-slate-400 mt-2">Zero-lockin packages with clean source code, tests, and production rulesets.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Starter Kit (Free / PWYW) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-white">Genesis Starter Kit</h3>
+              <span class="text-xs font-semibold bg-slate-800 border border-slate-700 text-slate-300 rounded px-2.5 py-0.5">Pay what you want ($0+)</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">The complete foundation for high-performance AI coding workflows.</p>
+            <ul class="text-xs text-slate-300 space-y-2 mt-4">
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>25 production rulesets (.cursorrules + CLAUDE.md)</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>Ready-to-use client configs for Claude, Cursor, Windsurf</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>Config generator script (Python)</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>MCP Architecture Playbook (Markdown &amp; HTML)</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800">
+            <a href="https://johanld.gumroad.com/l/genesis-starter-kit" target="_blank" rel="noopener noreferrer" class="w-full block text-center bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium py-2 rounded text-sm transition-colors">
+              Download on Gumroad ($0+)
+            </a>
+          </div>
+        </div>
+
+        <!-- Enterprise Suite ($19) -->
+        <div class="bg-slate-900 border-2 border-brand-500/70 rounded-xl p-6 flex flex-col justify-between shadow-lg shadow-brand-500/5">
+          <div>
+            <div class="flex items-center justify-between">
+              <h3 class="text-lg font-bold text-white">Enterprise MCP Suite</h3>
+              <span class="text-xs font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/40 rounded px-2.5 py-0.5">$19.00 USD</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-2">All six Pro servers, unified Docker stack, and comprehensive ruleset library.</p>
+            <ul class="text-xs text-slate-300 space-y-2 mt-4">
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>All 6 Pro Servers with fused modules &amp; test suites</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>55 full .cursorrules and CLAUDE.md files</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>15 specialized System Prompts for AI agents</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>Unified docker-compose.genesis-stack.yml orchestrator</span>
+              </li>
+              <li class="flex items-center space-x-2">
+                <span class="text-brand-400 font-bold">&check;</span>
+                <span>install.sh automated environment builder</span>
+              </li>
+            </ul>
+
+            <!-- Interactive Zip Inspection Disclosure -->
+            <details class="mt-4 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs group">
+              <summary class="cursor-pointer font-medium text-brand-400 flex items-center justify-between select-none hover:text-brand-300 transition-colors">
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-brand-400 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                  <span>Inspect package contents (.zip file breakdown)</span>
+                </span>
+                <span class="text-[10px] text-slate-500 font-mono">366 Tests &bull; 55+ Rules</span>
+              </summary>
+              <div class="mt-3 pt-3 border-t border-slate-800/80 font-mono text-[11px] text-slate-300 space-y-1 overflow-x-auto max-h-60 overflow-y-auto pr-1">
+                <div class="text-brand-300 font-semibold">genesis-mcp-enterprise-suite-pro-v2.0/</div>
+                <div class="text-slate-400">&boxur;&boxh;&boxh; docker-compose.genesis-stack.yml <span class="text-slate-500">(All 6 Pro servers unified)</span></div>
+                <div class="text-slate-400">&boxur;&boxh;&boxh; install.sh <span class="text-slate-500">(Automated local setup script)</span></div>
+                <div class="text-slate-400">&boxur;&boxh;&boxh; .env.example &amp; LICENSE.txt <span class="text-slate-500">(Commercial Lifetime Rights)</span></div>
+                <div class="text-slate-400">&boxur;&boxh;&boxh; servers/ <span class="text-emerald-400">(6 Pro MCP Servers with fused modules)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; crawlengine-mcp-pro/ <span class="text-slate-500">(+ ProxyShield rotation)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; pgsafe-mcp-pro/ <span class="text-slate-500">(+ MigrateSafe zero-downtime)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; browserbridge-mcp-pro/ <span class="text-slate-500">(Action receipts &amp; clean DOM)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; omnibridge-mcp-pro/ <span class="text-slate-500">(Slack &amp; Telegram dispatchers)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; sysflow-mcp-pro/ <span class="text-slate-500">(Systemd, journald &amp; build tools)</span></div>
+                <div class="text-slate-400 pl-4">&boxdl;&boxh;&boxh; fastmcp-forge-pro/ <span class="text-slate-500">(Production code generator)</span></div>
+                <div class="text-slate-400">&boxur;&boxh;&boxh; rules/ <span class="text-cyan-400">(55+ Production Rulesets for Cursor &amp; Claude Code)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; python/ <span class="text-slate-500">(FastAPI, Celery, SQLAlchemy, Async, Pytest)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; typescript/ <span class="text-slate-500">(Next.js, React, Node, Prisma, SvelteKit)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; rust/ <span class="text-slate-500">(Axum, Tokio, CLI, WASM)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; go/ <span class="text-slate-500">(HTTP, gRPC, Concurrency, CLI)</span></div>
+                <div class="text-slate-400 pl-4">&boxur;&boxh;&boxh; devops/ <span class="text-slate-500">(Docker, K8s, CI/CD, Terraform, Nginx)</span></div>
+                <div class="text-slate-400 pl-4">&boxdl;&boxh;&boxh; security/ <span class="text-slate-500">(OWASP, Secrets, Supply Chain, Threat Models)</span></div>
+                <div class="text-slate-400">&boxur;&boxh;&boxh; system-prompts/ <span class="text-amber-400">(15 Specialized AI Agent Personas)</span></div>
+                <div class="text-slate-400 pl-4">&boxdl;&boxh;&boxh; (Postgres DBA, Security Auditor, Incident Responder, etc.)</div>
+                <div class="text-slate-400">&boxdl;&boxh;&boxh; tests/ <span class="text-emerald-400">(366 unit &amp; integration tests, 100% PASS)</span></div>
+              </div>
+            </details>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-800">
+            <a href="https://johanld.gumroad.com/l/genesis-enterprise-suite" target="_blank" rel="noopener noreferrer" class="w-full block text-center bg-brand-500 hover:bg-brand-400 text-slate-950 font-semibold py-2 rounded text-sm transition-colors shadow">
+              Get Enterprise Suite ($19 USD)
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Verified Community Indexing -->
+      <div class="mt-8 p-4 bg-slate-900 border border-slate-800 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <a href="https://github.com/TensorBlock/awesome-mcp-servers" target="_blank" rel="noopener noreferrer">
+            <img src="https://img.shields.io/badge/Awesome--MCP--Servers-TensorBlock-blue?style=flat-square" alt="Awesome MCP Servers" />
+          </a>
+          <span class="text-xs text-slate-300"><strong>Verified Community Indexing:</strong> CrawlEngine MCP is officially listed in <a href="https://github.com/TensorBlock/awesome-mcp-servers" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">TensorBlock/awesome-mcp-servers</a> under Browser Automation &amp; Web Scraping.</span>
+        </div>
+        <a href="https://github.com/TensorBlock/awesome-mcp-servers" target="_blank" rel="noopener noreferrer" class="text-xs text-brand-400 hover:underline whitespace-nowrap">View TensorBlock Entry &rarr;</a>
+      </div>
+
+      <!-- Recommended Infrastructure -->
+      <div class="mt-12 bg-slate-900 border border-slate-800 rounded-lg p-5">
+        <h4 class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Recommended Infrastructure Providers</h4>
+        <p class="text-xs text-slate-400 mb-3">High-reputation hosting and proxy services tested with Genesis MCP servers. (Referral links):</p>
+        <div class="flex flex-wrap gap-4 text-xs font-medium">
+          <a href="https://www.hetzner.com/cloud" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">Hetzner Cloud (Low-latency Linux VPS)</a>
+          <span class="text-slate-600">&bull;</span>
+          <a href="https://www.digitalocean.com/" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">DigitalOcean (Managed Droplets)</a>
+          <span class="text-slate-600">&bull;</span>
+          <a href="https://www.webshare.io/" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">Webshare (Rotating datacenter proxies)</a>
+          <span class="text-slate-600">&bull;</span>
+          <a href="https://www.scraperapi.com/" target="_blank" rel="noopener noreferrer" class="text-brand-400 hover:underline">ScraperAPI (Anti-bot proxy network)</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-8 text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <span>&copy; 2026 Johann Schiffer &bull; Genesis MCP Ecosystem</span>
+      </div>
+      <div class="flex space-x-6">
+        <a href="https://github.com/johannschiffer" target="_blank" rel="noopener noreferrer" class="hover:text-slate-400">GitHub Profile</a>
+        <a href="https://johanld.gumroad.com/" target="_blank" rel="noopener noreferrer" class="hover:text-slate-400">Gumroad Store</a>
+        <a href="/sitemap.xml" class="hover:text-slate-400">Sitemap</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for interactive builder -->
+  <script>
+    const OWNER = "johannschiffer";
+    let activeTab = "claude";
+
+    const STACK_RULES = {
+      "python-fastapi": {
+        name: "Python / FastAPI",
+        stack: "Python 3.11+, FastAPI, Pydantic v2, SQLAlchemy 2.0 async, uvicorn, pytest",
+        conventions: [
+          "Type-annotate every function; run mypy --strict on app/ in CI",
+          "One APIRouter per domain module; keep route handlers under 25 lines and push logic into service functions",
+          "Request and response bodies are Pydantic models; never return ORM objects directly",
+          "Inject DB sessions, settings and auth via Depends; no module-level global clients",
+          "Raise HTTPException only in the API layer; services raise domain exceptions mapped by exception handlers"
+        ],
+        testing: [
+          "pytest with httpx.AsyncClient against the ASGI app, no live server",
+          "Override dependencies in tests instead of monkeypatching",
+          "Every endpoint gets a success test, a validation-failure test and an auth-failure test"
+        ],
+        security: [
+          "Validate all input with Pydantic constraints (max_length, ge, le, regex)",
+          "Hash passwords with argon2 or bcrypt; compare tokens with hmac.compare_digest",
+          "Set explicit CORS origins; never allow_origins=['*'] with credentials"
+        ],
+        avoid: [
+          "Blocking calls (requests, time.sleep, sync DB drivers) inside async def",
+          "Catch-all except Exception that swallows errors",
+          "Business logic in route functions"
+        ]
+      },
+      "nextjs-app-router": {
+        name: "Next.js 14 App Router",
+        stack: "Next.js 14+, React 18+, TypeScript strict, Server Components, Zod, Tailwind",
+        conventions: [
+          "Server Components by default; add 'use client' only for state, effects or browser APIs",
+          "Fetch data in Server Components or route handlers; cache and revalidate deliberately with tags",
+          "Mutations go through Server Actions or route handlers with Zod validation",
+          "Colocate loading.tsx, error.tsx and not-found.tsx with each route segment"
+        ],
+        testing: [
+          "Vitest or Jest for units, Playwright for critical flows, MSW for network mocking"
+        ],
+        security: [
+          "Validate every Server Action input server-side; never trust the client",
+          "Only NEXT_PUBLIC_ variables reach the browser; keep secrets server-only"
+        ],
+        avoid: [
+          "useEffect for data fetching",
+          "Passing non-serializable props across the server/client boundary",
+          "any and non-null assertions to silence the compiler"
+        ]
+      },
+      "go-http-service": {
+        name: "Go Clean HTTP Service",
+        stack: "Go 1.22+, net/http ServeMux, slog, sqlc or pgx",
+        conventions: [
+          "Accept interfaces, return structs; define interfaces at the consumer",
+          "Pass context.Context first in every function doing IO and honour cancellation",
+          "Wrap errors with fmt.Errorf(\"...: %w\") and test with errors.Is / errors.As",
+          "Graceful shutdown with signal.NotifyContext and server.Shutdown"
+        ],
+        testing: [
+          "Table-driven tests with t.Run, httptest.NewServer, go test -race ./... in CI"
+        ],
+        security: [
+          "Set server timeouts (ReadHeaderTimeout at minimum) and limit body with http.MaxBytesReader"
+        ],
+        avoid: [
+          "Goroutines without an exit path",
+          "Package-level mutable state",
+          "panic for control flow"
+        ]
+      },
+      "rust-cli": {
+        name: "Rust CLI & Services",
+        stack: "Rust stable, clap derive, anyhow, thiserror, tokio, tracing",
+        conventions: [
+          "Library crate for logic, thin binary crate for argument parsing and exit codes",
+          "thiserror for library errors, anyhow only in main",
+          "Return Result everywhere; no unwrap or expect outside tests",
+          "Machine-readable output behind --json; human output to stdout, diagnostics to stderr"
+        ],
+        testing: [
+          "assert_cmd and tempfile for end-to-end CLI tests; proptest for parsers"
+        ],
+        security: [
+          "Canonicalise and validate user-supplied paths before touching the filesystem"
+        ],
+        avoid: [
+          "Cloning to appease borrow checker without thinking",
+          "Panics for expected failures",
+          "Global mutable state"
+        ]
+      },
+      "postgres-schema-design": {
+        name: "PostgreSQL Schema & Migrations",
+        stack: "PostgreSQL 15+, SQL migrations, pgcrypto, citext",
+        conventions: [
+          "Every table has a primary key; prefer bigint identity or uuid v7",
+          "Model constraints in the database: NOT NULL, CHECK, UNIQUE, explicit foreign keys",
+          "Use timestamptz, never timestamp; store money as integer minor units",
+          "Name things consistently: snake_case, singular tables, <table>_id foreign keys"
+        ],
+        testing: [
+          "Test constraints with deliberate bad inserts in a migration test suite"
+        ],
+        security: [
+          "Least-privilege roles: app role cannot DDL; read-only role for analytics",
+          "Row-level security for multi-tenant tables"
+        ],
+        avoid: [
+          "JSON columns for relational data",
+          "Nullable columns by default",
+          "Storing secrets or tokens in plaintext"
+        ]
+      },
+      "docker-production": {
+        name: "Docker & DevOps Production",
+        stack: "Docker BuildKit, multi-stage builds, distroless or slim bases",
+        conventions: [
+          "Multi-stage builds: compile in a builder stage, copy artefacts into minimal runtime",
+          "Pin base images by version and digest; rebuild on a schedule for patches",
+          "Run as a non-root user with a read-only root filesystem where possible",
+          "Add HEALTHCHECK and handle SIGTERM for graceful shutdown"
+        ],
+        testing: [
+          "Build in CI, run container-structure-test or a smoke test against the built image"
+        ],
+        security: [
+          "Scan images with trivy or grype; never bake secrets into layers",
+          "Drop Linux capabilities and disallow privilege escalation"
+        ],
+        avoid: [
+          ":latest tags",
+          "apt-get install without --no-install-recommends and cache cleanup",
+          "Running as root"
+        ]
+      },
+      "security-code-review": {
+        name: "Security Code Review & OWASP",
+        stack: "OWASP ASVS, CWE Top 25, semgrep, bandit or gosec",
+        conventions: [
+          "Trace every untrusted input to its sinks: SQL, shell, filesystem, templates, deserializers",
+          "Check authentication, then authorization on every object access (IDOR)",
+          "Look for secrets in code, logs and error messages",
+          "Report findings with severity, exploit scenario, affected lines and concrete fix"
+        ],
+        testing: [
+          "Reproduce each finding with a failing test or proof-of-concept before reporting"
+        ],
+        security: [
+          "Prefer allowlists; treat deserialization, XML and template rendering as high risk"
+        ],
+        avoid: [
+          "Reporting theoretical issues without a path to exploitation",
+          "Suggesting fixes that only hide the symptom"
+        ]
+      },
+      "mcp-server-python": {
+        name: "MCP Server Architecture (Python)",
+        stack: "Python 3.10+, FastMCP / official mcp SDK, Pydantic, stdio & SSE transports",
+        conventions: [
+          "One tool = one clear verb with a precise docstring (the docstring is the model contract)",
+          "Type every parameter; validate and bound inputs (max lengths, enums) before use",
+          "Return structured, minimal results; paginate and truncate large outputs",
+          "Log to stderr only on stdio transports; stdout belongs to protocol packets",
+          "Make destructive tools opt-in with explicit confirmation parameters and dry_run"
+        ],
+        testing: [
+          "Test tools as plain functions, plus one end-to-end test through real transport"
+        ],
+        security: [
+          "Authenticate SSE endpoints (Bearer), validate Origin, rate-limit, scope access"
+        ],
+        avoid: [
+          "print() to stdout in stdio servers",
+          "Tools that accept free-form SQL or shell strings",
+          "Unbounded result sizes"
+        ]
+      }
+    };
+
+    function getSelectedServers() {
+      const ids = ['srv-crawlengine', 'srv-pgsafe', 'srv-browserbridge', 'srv-omnibridge', 'srv-sysflow', 'srv-fastmcp'];
+      return ids.filter(id => {
+        const el = document.getElementById(id);
+        return el && el.checked;
+      }).map(id => document.getElementById(id).value);
+    }
+
+    function applyPreset(preset) {
+      const map = {
+        'all': ['srv-crawlengine', 'srv-pgsafe', 'srv-browserbridge', 'srv-omnibridge', 'srv-sysflow', 'srv-fastmcp'],
+        'scraping': ['srv-crawlengine', 'srv-browserbridge'],
+        'data': ['srv-pgsafe', 'srv-sysflow', 'srv-omnibridge'],
+        'minimal': ['srv-crawlengine', 'srv-pgsafe']
+      };
+      const active = map[preset] || [];
+      const ids = ['srv-crawlengine', 'srv-pgsafe', 'srv-browserbridge', 'srv-omnibridge', 'srv-sysflow', 'srv-fastmcp'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = active.includes(id);
+      });
+      updateOutputs();
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      const tabs = ['claude', 'cursor', 'cursorrules', 'claude-md'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (!btn) return;
+        if (t === tab) {
+          btn.className = "px-3 py-2 text-xs font-semibold rounded-t border-b-2 border-brand-500 text-brand-400 bg-slate-900";
+        } else {
+          btn.className = "px-3 py-2 text-xs font-semibold rounded-t border-b-2 border-transparent text-slate-400 hover:text-slate-200";
+        }
+      });
+      updateOutputs();
+    }
+
+    function generateClaudeConfig(servers) {
+      const cfg = { mcpServers: {} };
+      servers.forEach(s => {
+        cfg.mcpServers[s] = {
+          command: "uvx",
+          args: ["--from", `git+https://github.com/${OWNER}/${s}`, s]
+        };
+      });
+      return JSON.stringify(cfg, null, 2);
+    }
+
+    function generateCursorRules(stackKey) {
+      const data = STACK_RULES[stackKey] || STACK_RULES['python-fastapi'];
+      let out = `# ${data.name} Ruleset for Cursor\n\n`;
+      out += `Stack: ${data.stack}\n\n`;
+      out += `## Conventions\n` + data.conventions.map(c => `- ${c}`).join('\n') + `\n\n`;
+      out += `## Testing\n` + data.testing.map(t => `- ${t}`).join('\n') + `\n\n`;
+      out += `## Security\n` + data.security.map(s => `- ${s}`).join('\n') + `\n\n`;
+      out += `## Avoid\n` + data.avoid.map(a => `- ${a}`).join('\n') + `\n\n`;
+      out += `## Working Agreement\n`;
+      out += `- Read existing files before making edits.\n`;
+      out += `- Make the smallest change that completely solves the issue.\n`;
+      out += `- Always run relevant tests and linters after each modification.\n`;
+      return out;
+    }
+
+    function generateClaudeMd(stackKey) {
+      const data = STACK_RULES[stackKey] || STACK_RULES['python-fastapi'];
+      let out = `# CLAUDE.md: ${data.name}\n\n`;
+      out += `## Project Context\nThis project uses: ${data.stack}.\n\n`;
+      out += `## Conventions\n` + data.conventions.map(c => `- ${c}`).join('\n') + `\n\n`;
+      out += `## Verification Workflow\n` + data.testing.map(t => `- ${t}`).join('\n') + `\n\n`;
+      out += `## Security Requirements\n` + data.security.map(s => `- ${s}`).join('\n') + `\n\n`;
+      out += `## Do Not\n` + data.avoid.map(a => `- ${a}`).join('\n') + `\n\n`;
+      out += `## Execution Protocol\n`;
+      out += `1. Restate the task clearly in 1 sentence.\n`;
+      out += `2. Implement in small verifiable increments.\n`;
+      out += `3. Report test execution outputs and verification steps.\n`;
+      return out;
+    }
+
+    function updateOutputs() {
+      const servers = getSelectedServers();
+      const stack = document.getElementById('stackSelector').value;
+      const codeArea = document.getElementById('outputCodeArea');
+      const hint = document.getElementById('outputTargetHint');
+
+      let content = "";
+      if (activeTab === 'claude') {
+        content = generateClaudeConfig(servers);
+        hint.textContent = "Destination: ~/.config/Claude/claude_desktop_config.json (macOS / Linux)";
+      } else if (activeTab === 'cursor') {
+        content = generateClaudeConfig(servers);
+        hint.textContent = "Destination: .cursor/mcp.json (in your project root)";
+      } else if (activeTab === 'cursorrules') {
+        content = generateCursorRules(stack);
+        hint.textContent = "Destination: .cursorrules (in your project root)";
+      } else if (activeTab === 'claude-md') {
+        content = generateClaudeMd(stack);
+        hint.textContent = "Destination: CLAUDE.md (in your project root)";
+      }
+
+      codeArea.textContent = content;
+    }
+
+    function copyCurrentOutput() {
+      const code = document.getElementById('outputCodeArea').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span class="text-brand-400 font-bold">&check; Copied!</span>`;
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+        openConversionModal('copy');
+      });
+    }
+
+    function downloadCurrentOutput() {
+      const code = document.getElementById('outputCodeArea').textContent;
+      let filename = "claude_desktop_config.json";
+      if (activeTab === 'cursor') filename = "mcp.json";
+      if (activeTab === 'cursorrules') filename = ".cursorrules";
+      if (activeTab === 'claude-md') filename = "CLAUDE.md";
+
+      const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      openConversionModal('download');
+    }
+
+    function openConversionModal(action) {
+      const modal = document.getElementById('conversionModal');
+      const title = document.getElementById('modalTitle');
+      if (!modal) return;
+      if (action === 'copy') {
+        title.textContent = "✅ Configuration Copied to Clipboard!";
+      } else {
+        title.textContent = "✅ Configuration File Downloaded!";
+      }
+      modal.classList.remove('hidden');
+      document.addEventListener('keydown', handleModalKeydown);
+    }
+
+    function closeConversionModal() {
+      const modal = document.getElementById('conversionModal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      document.removeEventListener('keydown', handleModalKeydown);
+    }
+
+    function handleModalKeydown(e) {
+      if (e.key === 'Escape') {
+        closeConversionModal();
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      updateOutputs();
+
+      const modal = document.getElementById('conversionModal');
+      if (modal) {
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            closeConversionModal();
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Conversion Modal (Post-Action Non-Intrusive) -->
+  <div id="conversionModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="relative w-full max-w-lg bg-slate-900 border border-slate-700 rounded-xl p-6 sm:p-8 shadow-2xl transition-all">
+      <button onclick="closeConversionModal()" type="button" class="absolute top-4 right-4 text-slate-400 hover:text-slate-100 p-1.5 rounded-lg border border-slate-700 hover:border-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-400 transition-colors" aria-label="Close dialog">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <div class="mb-4">
+        <h3 id="modalTitle" class="text-lg font-bold text-white tracking-tight">✅ Configuration Copied to Clipboard!</h3>
+        <p class="mt-2 text-sm text-slate-300 leading-relaxed">
+          Want the complete <strong>50+ Production .cursorrules</strong>, <strong>CLAUDE.md templates</strong> &amp; <strong>6 Enterprise MCP Servers</strong>?
+        </p>
+      </div>
+
+      <div class="mt-6 flex flex-col sm:flex-row gap-3">
+        <a href="https://johanld.gumroad.com/l/genesis-starter-kit" target="_blank" rel="noopener noreferrer" class="flex-1 text-center bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 hover:border-slate-500 font-medium py-2.5 px-4 rounded-lg text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-400">
+          Download Free Starter Kit ($0+ on Gumroad)
+        </a>
+        <a href="https://johanld.gumroad.com/l/genesis-enterprise-suite" target="_blank" rel="noopener noreferrer" class="flex-1 text-center bg-brand-500 hover:bg-brand-400 text-slate-950 font-semibold py-2.5 px-4 rounded-lg text-sm transition-colors shadow-md focus:outline-none focus:ring-2 focus:ring-brand-400">
+          Get Full Enterprise Suite ($19 USD)
+        </a>
+      </div>
+
+      <div class="mt-4 text-center">
+        <button onclick="closeConversionModal()" type="button" class="text-xs text-slate-400 hover:text-slate-200 underline underline-offset-2 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-400 rounded">
+          Continue with current configuration
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

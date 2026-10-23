@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://johannschiffer.github.io/sitemap.xml
